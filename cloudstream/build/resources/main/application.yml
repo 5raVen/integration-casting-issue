@@ -1,0 +1,45 @@
+server:
+  port : 9090
+
+
+
+spring:
+  rabbitmq:
+    host: localhost #127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    fail-fast: false
+    stream:
+      bindings:
+        send-order-request-output-channel:
+          content-type: application/json
+          destination: orderRequestQueue
+        order-request-input-channel:
+          consumer:
+            concurrency: 10
+            max-attempts: 1
+          destination: orderQueue
+          group: OrderRequest
+      rabbit:
+        bindings:
+          order-request-input-channel:
+            consumer:
+              acknowledge-mode: MANUAL
+              auto-bind-dlq: true
+              dlq-dead-letter-exchange: ''
+              dlq-ttl: 5000
+
+
+
+
+
+
+
+
+
+
+
+
+
